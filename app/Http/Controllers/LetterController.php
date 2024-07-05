@@ -24,10 +24,10 @@ class LetterController extends Controller
     {
         //
         $validated = $request->validate([
-            "title" => "required",
-            "content" => "required",
-            "sender_id" => "required",
-            "reciever_id" => "required"
+            "title" => "required|string",
+            "content" => "required|string",
+            "sender_id" => "required|integer",
+            "reciever_id" => "required|integer"
         ]);
 
         $letter = Letter::create($validated);
@@ -41,24 +41,23 @@ class LetterController extends Controller
     public function show(Request $request)
     {
         //
-        $letter = Letter::find($request->id);
-
+        $letter = Letter::query()->where('id', $request->letter)->firstOrFail();
         return response()->json($letter, 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Letter $letter)
+    public function update(Request $request)
     {
         //
-        $letter = Letter::find($request->id);
+        $letter = Letter::query()->where('id', $request->letter)->firstOrFail();
 
         $validated = $request->validate([
-            "title" => "required",
-            "content" => "required",
-            "sender_id" => "required",
-            "reciever_id" => "required"
+            "title" => "required|sometimes|string",
+            "content" => "required|sometimes|string",
+            "sender_id" => "required|sometimes|integer",
+            "reciever_id" => "required|sometimes|integer"
         ]);
 
         $letter->update($validated);
@@ -72,7 +71,7 @@ class LetterController extends Controller
     public function destroy(Request $request)
     {
         //
-        $letter = Letter::find($request->id);
+        $letter = Letter::query()->where('id', $request->letter)->firstOrFail();
         $letter->delete();
 
         return response()->json(null, 204);
